@@ -1,0 +1,1 @@
+alter table roles modify column role_types varchar(255);

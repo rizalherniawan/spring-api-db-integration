@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService{
         Users createUser = new Users();
         createUser.setUsername(userField.getUsername());
         createUser.setPassword(SecurityConfiguration.bCryptPasswordEncoder().encode(userField.getPassword()));
+        this.userRepository.save(createUser);
         Roles roles = new Roles();
         if(StringUtils.isEmpty(userField.getRoles())) {
             roles.setRoleTypes(RolesList.user);
@@ -44,8 +45,9 @@ public class UserServiceImpl implements UserService{
         } else if(userField.getRoles().equals("ADMIN")){
             roles.setRoleTypes(RolesList.admin);
             roles.setUsers(createUser);
+        } else {
+            throw new RequestException("role is not existed");
         }
         this.roleRepository.save(roles);
-        this.userRepository.save(createUser);
     }
 }
