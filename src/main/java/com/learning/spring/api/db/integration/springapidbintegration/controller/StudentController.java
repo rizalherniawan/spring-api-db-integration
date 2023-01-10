@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.learning.spring.api.db.integration.springapidbintegration.dto.ConverterStudetsToGradeCourseStudentsDto;
+import com.learning.spring.api.db.integration.springapidbintegration.dto.GradesCourseStudentsDto;
 import com.learning.spring.api.db.integration.springapidbintegration.dto.ReqStudent;
 import com.learning.spring.api.db.integration.springapidbintegration.dto.Response;
 import com.learning.spring.api.db.integration.springapidbintegration.entity.Student;
@@ -26,6 +28,9 @@ public class StudentController {
     @Autowired
     StudentServiceImpl studentService;
 
+    @Autowired
+    ConverterStudetsToGradeCourseStudentsDto converterGradesToGradesStudentCourse;
+
     @PostMapping("/add")
     public ResponseEntity<Response> addStudent(@RequestBody ReqStudent student) {
         this.studentService.addStudent(student);
@@ -38,16 +43,10 @@ public class StudentController {
         return new ResponseEntity<>(new Response<>(200, true, data), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Response<Student>> getById(@PathVariable UUID id) {
-        Student getStudent = this.studentService.getById(id);
-        return new ResponseEntity<>(new Response<>(200, true, getStudent), HttpStatus.OK);
-    }
-
-    @GetMapping("/students")
-    public ResponseEntity<Response<List<Student>>> getAllDeletedItem() {
-        List<Student> data = this.studentService.findAllDeleteItem();
-        return new ResponseEntity<>(new Response<>(200, true, data), HttpStatus.OK);
+    @GetMapping("/{id}/details")
+    public ResponseEntity<Response<GradesCourseStudentsDto>> details(@PathVariable UUID id) {
+        return new ResponseEntity<>(new Response<>(200, true, 
+            this.converterGradesToGradesStudentCourse.convert(this.studentService.details(id))), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

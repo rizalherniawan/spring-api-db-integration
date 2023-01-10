@@ -12,6 +12,6 @@ public interface StudentService {
     public List<Student> getAll();
     public Student getById(UUID id);
     public void deleteById(UUID id);
-    public List<Student> findAllDeleteItem();
     public void updateStudent(ReqStudent reqStudent, UUID id);
+    public Student details(UUID id);
 }

@@ -1,10 +1,9 @@
 package com.learning.spring.api.db.integration.springapidbintegration.entity;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
+import javax.management.relation.Role;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,25 +19,21 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "students")
+@Table(name = "users")
 @Getter
 @Setter
-public class Student {
-
+public class Users {
     @Id
     @Column(name = "id")
     @Type(type = "uuid-char")
     private UUID uuid = UUID.randomUUID();
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "username")
+    String username;
 
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
+    @Column(name = "password")
+    String password;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @OneToMany(mappedBy = "student" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Grades> grades;
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Roles> roles;
 }

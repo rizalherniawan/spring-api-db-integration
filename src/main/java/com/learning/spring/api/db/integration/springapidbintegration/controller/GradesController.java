@@ -1,5 +1,6 @@
 package com.learning.spring.api.db.integration.springapidbintegration.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,9 @@ public class GradesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<Grades>> getGradeByStudentId(@PathVariable UUID id) {
-        Grades grades = this.gradesService.getGradeByStudentId(id);
+    public ResponseEntity<Response<List<Grades>>> getGradeByStudentId(@PathVariable UUID id) {
+        List<Grades> grades = this.gradesService.getGradeByStudentId(id); 
+        // GradesCourseStudentsDto result = ConverterGradesToGradesStudentCourse.convert(grades);
         return new ResponseEntity<>(new Response<>(200, true, grades), HttpStatus.OK);
     }
 }

@@ -3,13 +3,18 @@ package com.learning.spring.api.db.integration.springapidbintegration.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.learning.spring.api.db.integration.springapidbintegration.dto.ReqStudent;
 import com.learning.spring.api.db.integration.springapidbintegration.entity.Student;
+import com.learning.spring.api.db.integration.springapidbintegration.exception.NotFoundException;
 import com.learning.spring.api.db.integration.springapidbintegration.exception.RequestException;
 import com.learning.spring.api.db.integration.springapidbintegration.repository.StudentRepository;
 
@@ -38,17 +43,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getById(UUID id) {
-        return this.studentRepo.findById(id).orElseThrow(() -> new RequestException("student not found"));
+        return this.studentRepo.findById(id).orElseThrow(() -> new NotFoundException("student not found"));
     }
 
     @Override
     public void deleteById(UUID id) {
         this.studentRepo.deleteById(id);
-    }
-
-    @Override
-    public List<Student> findAllDeleteItem() {
-        return this.studentRepo.findAllDeleteItem();
     }
 
     @Override
@@ -67,5 +67,20 @@ public class StudentServiceImpl implements StudentService {
             student.setName(reqStudent.getName());
         }
         this.studentRepo.save(student);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Student details(UUID id) {
+        Optional<Student> student = this.studentRepo.findById(id);
+        if(student.isPresent()){
+            if(CollectionUtils.isNotEmpty(student.get().getGrades())) {
+                Hibernate.initialize(student.get().getGrades());
+            }
+        return student.get();
+        }
+        else {
+            throw new NotFoundException("student id not found");
+        }
     }
 }

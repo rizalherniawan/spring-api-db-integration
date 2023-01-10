@@ -1,0 +1,1 @@
+alter table roles rename column roles to role_types;
