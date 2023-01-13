@@ -7,15 +7,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class JwtAuthorizationFilter extends OncePerRequestFilter{@Override
+public class JwtAuthorizationFilter extends OncePerRequestFilter{
+
+    @Autowired
+    private JwtTokenService tokenService;
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // TODO Auto-generated method stub
         filterChain.doFilter(request, response);
     }
     

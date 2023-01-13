@@ -20,6 +20,9 @@ public class SecurityConfiguration {
     @Autowired
     CustomAuthenticationProvider authenticationProvider;
 
+    @Autowired
+    JwtTokenService tokenService;
+
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = 
@@ -35,10 +38,10 @@ public class SecurityConfiguration {
                     .csrf().disable()
                     .authorizeRequests()
                     .antMatchers(HttpMethod.POST, "/v1/user/register").permitAll()
-                    .antMatchers(HttpMethod.POST, "v1/user/login").permitAll()
+                    .antMatchers(HttpMethod.POST, "/v1/user/login").permitAll()
                     .anyRequest().authenticated()
                     .and()
-                    .addFilterAfter(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterAfter(new JwtAuthorizationFilter(tokenService), UsernamePasswordAuthenticationFilter.class)
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return httpSecurity.build();
     }

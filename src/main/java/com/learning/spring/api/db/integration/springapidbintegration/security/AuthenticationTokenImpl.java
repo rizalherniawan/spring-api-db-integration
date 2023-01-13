@@ -22,6 +22,16 @@ public class AuthenticationTokenImpl extends AbstractAuthenticationToken {
         this.username = principal;
     }
 
+    public void authenticate() {
+        // it will compare with created date plus 1 hour.
+        //if (getDetails() != null && getDetails() instanceof SessionUser && !((SessionUser) getDetails()).hasExpired()) {
+        if (getDetails() != null && getDetails() instanceof SessionUser) {
+            setAuthenticated(true);
+        } else {
+            setAuthenticated(false);
+        }
+    }
+
     @Override
     public Object getCredentials() {
         return password != null ? password : "";
@@ -32,14 +42,4 @@ public class AuthenticationTokenImpl extends AbstractAuthenticationToken {
         return username != null ? username : "";
     }
 
-    public void authenticate() {
-        // it will compare with created date plus 1 hour.
-        //if (getDetails() != null && getDetails() instanceof SessionUser && !((SessionUser) getDetails()).hasExpired()) {
-        if (getDetails() != null && getDetails() instanceof SessionUser) {
-            setAuthenticated(true);
-        } else {
-            setAuthenticated(false);
-        }
-    }
-    
 }

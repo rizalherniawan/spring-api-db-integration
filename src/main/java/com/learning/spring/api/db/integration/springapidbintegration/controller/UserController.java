@@ -3,7 +3,6 @@ package com.learning.spring.api.db.integration.springapidbintegration.controller
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +14,7 @@ import com.learning.spring.api.db.integration.springapidbintegration.dto.LoginDt
 import com.learning.spring.api.db.integration.springapidbintegration.dto.ReqUser;
 import com.learning.spring.api.db.integration.springapidbintegration.dto.Response;
 import com.learning.spring.api.db.integration.springapidbintegration.dto.SessionUser;
+import com.learning.spring.api.db.integration.springapidbintegration.security.CustomAuthenticationProvider;
 import com.learning.spring.api.db.integration.springapidbintegration.security.JwtTokenService;
 import com.learning.spring.api.db.integration.springapidbintegration.service.UserServiceImpl;
 
@@ -27,7 +27,7 @@ public class UserController {
     UserServiceImpl userService;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    CustomAuthenticationProvider authenticationProvider;
 
     @Autowired
     JwtTokenService tokenService;
@@ -40,7 +40,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<Response<SessionUser>> login(@RequestBody LoginDto user) {
-        Authentication auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        Authentication auth = this.authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         SessionUser u = (SessionUser) auth.getDetails();
         return new ResponseEntity<>(new Response<>(200, true, u), HttpStatus.OK);
     }

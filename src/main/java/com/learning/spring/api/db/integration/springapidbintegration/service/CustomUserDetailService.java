@@ -39,7 +39,7 @@ public class CustomUserDetailService implements UserDetailsService{
     private Collection<GrantedAuthority> mappingRoles(List<Roles> roles){
         List<GrantedAuthority> authority = new ArrayList<>();
         for(Roles role : roles) {
-            authority.add((GrantedAuthority) role);
+            authority.add(new SimpleGrantedAuthority(role.getRoleTypes()));
         }
         return authority;
     }
