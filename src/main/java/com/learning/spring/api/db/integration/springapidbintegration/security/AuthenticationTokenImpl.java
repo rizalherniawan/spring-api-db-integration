@@ -26,8 +26,10 @@ public class AuthenticationTokenImpl extends AbstractAuthenticationToken {
         // it will compare with created date plus 1 hour.
         //if (getDetails() != null && getDetails() instanceof SessionUser && !((SessionUser) getDetails()).hasExpired()) {
         if (getDetails() != null && getDetails() instanceof SessionUser) {
+            System.out.println("berhasil");
             setAuthenticated(true);
         } else {
+            System.out.println("gagal");
             setAuthenticated(false);
         }
     }

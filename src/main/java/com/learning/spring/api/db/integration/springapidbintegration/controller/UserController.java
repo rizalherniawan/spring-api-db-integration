@@ -1,14 +1,15 @@
 package com.learning.spring.api.db.integration.springapidbintegration.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import com.learning.spring.api.db.integration.springapidbintegration.dto.LoginDto;
 import com.learning.spring.api.db.integration.springapidbintegration.dto.ReqUser;
@@ -43,5 +44,12 @@ public class UserController {
         Authentication auth = this.authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         SessionUser u = (SessionUser) auth.getDetails();
         return new ResponseEntity<>(new Response<>(200, true, u), HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_USER"})
+    @GetMapping("/detail")
+    public List<String> getDetailuser(){
+       SessionUser user = (SessionUser) SecurityContextHolder.getContext().getAuthentication().getDetails();
+       return user.getRoles();
     }
 }
